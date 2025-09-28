@@ -1,0 +1,10 @@
+<svg width="320" height="64" viewBox="0 0 320 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="64" rx="12" fill="#17171c"/>
+  <g transform="translate(12,12)">
+    <rect width="40" height="40" rx="8" fill="#7c5cff"/>
+    <path d="M20 18 l8 0 l-8 8 l10 0" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="70" y="38" fill="#f2f2f7" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="22" font-weight="600">
+    Uplift Upholstery
+  </text>
+</svg>

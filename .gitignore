@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Node / build (future-proofing)
+node_modules/
+dist/
+build/
+.env
+.env.*
+*.log
