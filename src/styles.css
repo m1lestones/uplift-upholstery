@@ -16,6 +16,9 @@ button.primary { background:var(--accent); color:white; }
 button:hover { filter:brightness(1.1); }
 input:focus, select:focus { outline:2px solid #2f2f8a; outline-offset:2px; }
 .estimate { margin-top:12px; padding:12px; border-radius:10px; background:#0f1221; }
+.hint { color:var(--muted); font-size:.85rem; }
+.note { margin-top:8px; padding:10px; border-radius:8px; background:#12161e; border:1px solid #2b3140; color:#d7e3ff; }
+.note.warn { background:#291515; border-color:#a33; color:#ffd7d7; }
 .hidden { display:none; }
 footer { text-align:center; color:var(--muted); padding:24px 0 40px; }
 @media (max-width:720px){ .grid { grid-template-columns:1fr; } }
