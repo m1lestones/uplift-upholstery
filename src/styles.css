@@ -1,24 +1,86 @@
-:root { --bg:#0f0f12; --card:#17171c; --text:#f2f2f7; --muted:#a1a1aa; --accent:#7c5cff; }
-* { box-sizing:border-box; }
-html,body { margin:0; padding:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto; }
-.container { width:min(960px, 92%); margin-inline:auto; }
-header { text-align:center; padding:40px 0 16px; }
-.logo { height:48px; margin-bottom:12px; }
-.tagline { color:var(--muted); margin-top:4px; }
-.card { background:var(--card); padding:24px; border-radius:16px; box-shadow:0 5px 30px rgba(0,0,0,.3); }
-.stack { display:flex; flex-direction:column; gap:8px; }
-.group { display:flex; flex-direction:column; gap:6px; margin:6px 0; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-label { color:var(--muted); font-size:.95rem; }
-input, select, button { padding:12px 14px; border-radius:10px; border:1px solid #2a2a32; background:#121217; color:var(--text); }
-button { cursor:pointer; border:none; background:#2a2a32; }
-button.primary { background:var(--accent); color:white; }
-button:hover { filter:brightness(1.1); }
-input:focus, select:focus { outline:2px solid #2f2f8a; outline-offset:2px; }
-.estimate { margin-top:12px; padding:12px; border-radius:10px; background:#0f1221; }
-.hint { color:var(--muted); font-size:.85rem; }
+/* layout */
+.wrap { max-width: 760px; margin: 32px auto; padding: 0 16px; }
+.stack > * + * { margin-top: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.group label { display:block; margin-bottom:6px; font-weight:600; }
+input, select, button { font: inherit; padding: 10px; border-radius: 8px; border: 1px solid #d0d5dd; width: 100%; box-sizing: border-box; }
+input:focus, select:focus { outline: 2px solid #7c5cff33; border-color: #7c5cff; }
+h1 { color: #7c5cff; margin-bottom: 8px; }
+
+/* toolbar */
+.toolbar { display: flex; justify-content: flex-end; margin: 8px 0 12px; }
+.theme-toggle { background: transparent; color: inherit; border: 1px solid #d0d5dd; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.theme-toggle:hover { background: #f5f5f7; }
+.theme-toggle:focus { outline: 2px solid #7c5cff33; outline-offset: 2px; }
+
+/* components */
+.btn { cursor: pointer; display: inline-block; background: #2a2a32; color: #fff; border: 0; padding: 10px 14px; border-radius: 10px; width: auto; }
+.btn.primary { background: #7c5cff; }
+.btn.secondary { background: #303036; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.approve { display: flex; gap: 8px; align-items: center; }
+.estimate { padding: 12px; background: #f6f5ff; border: 1px solid #e2ddff; border-radius: 10px; }
 .note { margin-top:8px; padding:10px; border-radius:8px; background:#12161e; border:1px solid #2b3140; color:#d7e3ff; }
 .note.warn { background:#291515; border-color:#a33; color:#ffd7d7; }
-.hidden { display:none; }
-footer { text-align:center; color:var(--muted); padding:24px 0 40px; }
-@media (max-width:720px){ .grid { grid-template-columns:1fr; } }
+
+.hidden { display: none; }
+
+/* small screens */
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Theme variables ===== */
+:root {
+  --bg: #ffffff;
+  --text: #0b1220;
+  --card: #f6f5ff;
+  --card-border: #e2ddff;
+  --border: #d0d5dd;
+  --primary: #7c5cff;
+  --btn: #2a2a32;
+  --btn-secondary: #303036;
+
+  --note-bg: #12161e;
+  --note-border: #2b3140;
+  --note-text: #d7e3ff;
+}
+
+.theme-dark {
+  --bg: #0b1220;
+  --text: #e7ecf8;
+  --card: #141a2b;
+  --card-border: #2b3653;
+  --border: #2b3140;
+  --primary: #b7a4ff;
+  --btn: #3a3f52;
+  --btn-secondary: #2e3447;
+
+  --note-bg: #1b2235;
+  --note-border: #334267;
+  --note-text: #d7e3ff;
+}
+
+/* Apply variables to your existing UI */
+body { background: var(--bg); color: var(--text); transition: background 0.2s ease, color 0.2s ease; }
+h1 { color: var(--primary); }
+input, select, button { background: var(--bg); color: var(--text); border-color: var(--border); }
+.btn { background: var(--btn); color: #fff; }
+.btn.secondary { background: var(--btn-secondary); }
+.btn.primary { background: var(--primary); }
+
+.estimate { background: var(--card); border: 1px solid var(--card-border); }
+.note { background: var(--note-bg); border-color: var(--note-border); color: var(--note-text); }
+
+/* Toggle button layout */
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.theme-toggle:focus { outline: 2px solid color-mix(in srgb, var(--primary) 40%, transparent); outline-offset: 2px; }

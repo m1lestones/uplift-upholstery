@@ -3,28 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Uplift Upholstery — Instant Baseline Quote</title>
-  <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+  <title>Upholstery Presentation — Instant Quote MVP</title>
   <link rel="stylesheet" href="./styles.css" />
-  <meta name="description" content="Instant baseline quote for dining chair seat reupholstery.">
+
+  <!-- Calendly assets (safe to keep even if you don't use it yet) -->
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
 <body>
-  <header class="container">
-    <img src="./assets/logo.svg" alt="Uplift Upholstery" class="logo" />
-    <h1>Instant baseline quote for dining chair seats</h1>
-    <p class="tagline">Fast estimate now. Final price confirmed after review.</p>
-  </header>
+  <main class="wrap">
+    <h1>Upholstery Presentation</h1>
+    <p><strong>Goal:</strong> photo → price → scheduled in &lt; 5 minutes.</p>
 
-  <main class="container card">
+    <div class="toolbar">
+      <button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false" title="Toggle theme">🌙 Dark</button>
+    </div>
+
     <form id="quote-form" class="stack">
+      <!-- Honeypot (anti-spam) -->
+      <input type="text" id="website" name="website" class="hidden" tabindex="-1" autocomplete="off" />
+
       <div class="group">
         <label for="photoUrl">Photo link (Google Drive/iCloud URL)</label>
         <input type="url" id="photoUrl" placeholder="https://..." required />
-
-        <small class="hint">
-          Tip: shoot in daylight, fill the frame, hold steady.
-        </small>
-        <div id="photoWarnings" class="note hidden" aria-live="polite"></div>
+        <small class="hint">Tip: daylight, fill the frame, hold steady.</small>
+        <div id="photoWarnings" class="note hidden"></div>
       </div>
 
       <div class="grid">
@@ -57,17 +60,46 @@
         </div>
       </div>
 
-      <button type="button" id="estimateBtn">Get Instant Estimate</button>
+      <button type="button" id="estimateBtn" class="btn">Get Instant Estimate</button>
 
       <div id="estimate" class="estimate hidden" aria-live="polite"></div>
 
-      <button type="submit" class="primary">Send Request</button>
-    </form>
-  </main>
+      <!-- Price approval -->
+      <label class="approve">
+        <input type="checkbox" id="approvePrice" />
+        I approve this baseline price (final price after manual photo review).
+      </label>
 
-  <footer class="container">
-    <small>© Uplift Upholstery — Fast, friendly reupholstery for families</small>
-  </footer>
+      <!-- Actions: deposit + scheduling -->
+      <div class="actions">
+        <a href="https://buy.stripe.com/YOUR_PAYMENT_LINK" id="depositLink" target="_blank" class="btn secondary hidden">
+          Pay small booking deposit
+        </a>
+        <button type="button" id="openScheduler" class="btn hidden">Pick a time</button>
+      </div>
+
+      <!-- Calendly inline embed -->
+      <div id="calendlyWrap" class="hidden">
+        <div class="calendly-inline-widget"
+             data-url="https://calendly.com/YOUR_HANDLE/15min?hide_event_type_details=1&hide_gdpr_banner=1"
+             style="min-width:320px;height:650px;"></div>
+      </div>
+
+      <!-- Hidden fields populated on booking (optional, for your email) -->
+      <input type="hidden" id="calendlyEventUri" />
+      <input type="hidden" id="calendlyInviteeUri" />
+
+      <button type="submit" id="submitBtn" class="btn primary" disabled>Send Request</button>
+    </form>
+
+    <section aria-labelledby="faq">
+      <h2 id="faq">Quick FAQ</h2>
+      <details><summary>Best photo tips?</summary><p>Daylight, fill the seat in the frame, hold steady. Avoid heavy shadows.</p></details>
+      <details><summary>How to measure?</summary><p>Measure seat width (left→right) and depth (front→back) in inches, to the nearest ¼”.</p></details>
+      <details><summary>Turnaround time?</summary><p>Most dining seats in 3–5 days after fabric selection. We’ll confirm on your call.</p></details>
+      <small>Privacy: We only use your info to return an estimate and schedule service.</small>
+    </section>
+  </main>
 
   <script src="./app.js"></script>
 </body>
