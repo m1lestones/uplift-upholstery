@@ -153,6 +153,11 @@ form.addEventListener('submit', async (e) => {
   // Honeypot: if filled, drop
   if (document.getElementById('website').value.trim() !== "") return;
 
+  // Disable button to prevent double-clicks
+  submitBtn.disabled = true;
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending…';
+
   const payload = {
     photoUrl: document.getElementById('photoUrl').value,
     width: document.getElementById('width').value,
@@ -162,32 +167,68 @@ form.addEventListener('submit', async (e) => {
     email: document.getElementById('email').value,
     estimateText: estimateDiv.innerText || '',
     priceApproved: !!approvePrice.checked,
-    schedulingIntent: scheduleClicked,
-    bookingCompleted: bookingCompleted,
-    calendlyEventUri: calendlyEventUri.value,
-    calendlyInviteeUri: calendlyInviteeUri.value,
+    schedulingIntent: typeof scheduleClicked !== 'undefined' ? scheduleClicked : false,
+    bookingCompleted: typeof bookingCompleted !== 'undefined' ? bookingCompleted : false,
+    calendlyEventUri: document.getElementById('calendlyEventUri').value,
+    calendlyInviteeUri: document.getElementById('calendlyInviteeUri').value,
     submittedAt: new Date().toISOString()
   };
 
   try {
-    const res = await fetch('https://formspree.io/f/YOUR_ENDPOINT', {
+    const res = await fetch('https://formspree.io/f/xnngvone', {
       method: 'POST',
       headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (res.ok) {
-      alert('Thanks! We received your request.');
-      form.reset();
-      estimateDiv.classList.add('hidden');
-      submitBtn.disabled = true;
-      if (depositLink) depositLink.classList.add('hidden');
-      if (openScheduler) openScheduler.classList.add('hidden');
-      calendlyWrap.classList.add('hidden');
-    } else {
-      alert('Submission failed. Please try again.');
+
+    // See exactly what Formspree replied (shows in Console)
+    let data = {};
+    try { data = await res.json(); } catch {}
+    console.log('Formspree response:', res.status, data);
+
+    // Success shapes
+    if (res.ok || data.ok || data._status === 'success') {
+      window.location.href = 'thanks.html'; // ← redirect to your thank-you page (no leading slash)
+      return;
     }
+
+    // If not success, show the real error message
+    const msg =
+      (data.errors && data.errors[0]?.message) ||
+      data.error ||
+      JSON.stringify(data) ||
+      'Unknown error';
+    alert(`Submission failed (${res.status}). ${msg}`);
+
   } catch (err) {
     console.error(err);
     alert('Network error. Please try again.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
   }
 });
+
+// ===== Dynamic email link (prefill mailto from form inputs) =====
+const emailLink = document.getElementById('emailLink');
+if (emailLink) {
+  function updateMailto() {
+    const photo = document.getElementById('photoUrl').value || '';
+    const width = document.getElementById('width').value || '';
+    const depth = document.getElementById('depth').value || '';
+    const fabric = document.getElementById('fabric').value || '';
+    const phone  = document.getElementById('phone').value || '';
+    const email  = document.getElementById('email').value || '';
+
+    const subject = 'Furniture Upholstery Quote Request';
+    const body = `Hi Juan,\n\nMy photo: ${photo}\nMeasurements: ${width} x ${depth} in\nFabric: ${fabric}\nPhone: ${phone}\nEmail: ${email}\n\nThanks!`;
+
+    emailLink.href = `mailto:juan.franco@pursuit.org?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  ['photoUrl','width','depth','fabric','phone','email']
+    .forEach(id => document.getElementById(id)?.addEventListener('input', updateMailto));
+
+  updateMailto(); // set it once on load
+}
+
