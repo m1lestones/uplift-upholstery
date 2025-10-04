@@ -147,6 +147,23 @@ if (typeof setTheme !== 'function') {
 
 // ===== Submit (Formspree JSON) =====
 // Replace YOUR_ENDPOINT below with your real Formspree ID (e.g. /f/abcd1234)
+async function getRecaptchaToken() {
+  const siteKey = '6Ldr0d0rAAAAADyluFf8RhYNipEJHLNrQc2hWWNz';
+  if (!(window.grecaptcha && grecaptcha.execute)) {
+    console.warn('reCAPTCHA not loaded');
+    return null;
+  }
+  try {
+    if (grecaptcha.ready) {
+      await new Promise((resolve) => grecaptcha.ready(resolve));
+    }
+    return await grecaptcha.execute(siteKey, { action: 'submit' });
+  } catch (e) {
+    console.warn('reCAPTCHA token error', e);
+    return null;
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -173,6 +190,14 @@ form.addEventListener('submit', async (e) => {
     calendlyInviteeUri: document.getElementById('calendlyInviteeUri').value,
     submittedAt: new Date().toISOString()
   };
+
+  // Attach reCAPTCHA v3 token
+  try {
+    const token = await getRecaptchaToken();
+    if (token) payload['g-recaptcha-response'] = token;
+  } catch (_) {
+    // Non-fatal; proceed without token (server may reject if required)
+  }
 
   try {
     const res = await fetch('https://formspree.io/f/xnngvone', {
